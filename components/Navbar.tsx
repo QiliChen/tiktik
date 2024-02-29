@@ -9,8 +9,9 @@ import { GoogleLogin, googleLogout  } from '@react-oauth/google';
 
 import useAuthStore from '../store/authStore';
 import { IUser } from '../types';
-import { createOrGetUser } from '../utils';
 import Logo from '../utils/tiktik-logo.png';
+import {IoLogInOutline} from "react-icons/io5";
+import {Bounce, toast, ToastContainer} from "react-toastify";
 
 const Navbar = () => {
     const [user, setUser] = useState<IUser | null>();
@@ -58,16 +59,16 @@ const Navbar = () => {
                         onClick={handleSearch}
                         className='absolute md:right-5 right-6 top-4 border-l-2 border-gray-300 pl-4 text-2xl text-gray-400'
                     >
-                        <BiSearch />
+                        <BiSearch/>
                     </button>
                 </form>
             </div>
             <div>
                 {user ? (
-                    <div className='flex gap-5 md:gap-10'>
+                    <div className='flex gap-3 md:gap-5'>
                         <Link href='/upload'>
-                            <button className='border-2 px-2 md:px-4 text-md font-semibold flex items-center gap-2'>
-                                <IoMdAdd className='text-xl' />{' '}
+                            <button className='border-2 h-10 px-2 md:px-4 text-md font-semibold flex items-center gap-2'>
+                                <IoMdAdd className='text-xl'/>{' '}
                                 <span className='hidden md:block'>Upload </span>
                             </button>
                         </Link>
@@ -92,15 +93,26 @@ const Navbar = () => {
                                 removeUser();
                             }}
                         >
-                            <AiOutlineLogout color='red' fontSize={21} />
+                            <AiOutlineLogout color='red' fontSize={21}/>
                         </button>
                     </div>
                 ) : (
-                    <GoogleLogin
-                        onSuccess={(response) => createOrGetUser(response, addUser)}
-                        onError={() => console.log('Login Failed')}
-                    />
-                )}
+                    <div className={"flex gap-1 md:gap-2 "}>
+                        <Link href='/login'>
+                            <button className='border-2 h-10 px-2 md:px-4 text-md font-semibold flex items-center gap-2'>
+                                <IoLogInOutline className='text-xl'/>
+                                <span className='hidden md:block'>Login </span>
+                            </button>
+                        </Link>
+
+                        {/*<GoogleLogin*/}
+                        {/*    onSuccess={(response) => createOrGetUser(response, addUser)}*/}
+                        {/*    onError={() => console.log('Login Failed')}*/}
+                        {/*/>*/}
+
+                    </div>
+
+                    )}
             </div>
         </div>
     );

@@ -5,6 +5,7 @@ import VideoCard from '../components/VideoCard';
 import { BASE_URL } from '../utils';
 import { Video } from '../types';
 import NoResults from '../components/NoResults';
+import useAuthStore from "../store/authStore";
 
 interface IProps {
   videos: Video[];

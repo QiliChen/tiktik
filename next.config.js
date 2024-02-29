@@ -6,7 +6,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images:{
-    domains:['i.kfs.io','lh3.googleusercontent.com'],
+    domains:['lh3.googleusercontent.com','img.tuxiangyan.com'],
   }
 }
 

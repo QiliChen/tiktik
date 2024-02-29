@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import { BASE_URL } from '../utils';
 
-const authStore = (set: any) => ({
+const authStore = (set: any, get: any) => ({
     userProfile: null,
     allUsers: [],
 
@@ -13,15 +13,17 @@ const authStore = (set: any) => ({
 
     fetchAllUsers: async () => {
         const response = await axios.get(`${BASE_URL}/api/users`);
-
         set({ allUsers: response.data });
+    },
+
+    isLoggedIn: () => {
+        const { userProfile } = get();
+        return userProfile !== null;
     },
 });
 
-const useAuthStore = create((
-    persist(authStore, {
-        name: 'auth',
-    })
-));
+const useAuthStore = create(persist(authStore, {
+    name: 'auth',
+}));
 
 export default useAuthStore;

@@ -12,7 +12,8 @@ export const allPostsQuery = () => {
       postedBy->{
         _id,
         userName,
-        image
+        image,
+        type
       },
     likes,
     comments[]{
@@ -21,7 +22,8 @@ export const allPostsQuery = () => {
       postedBy->{
       _id,
       userName,
-      image
+      image,
+      type
     },
     }
   }`;
@@ -43,7 +45,8 @@ export const postDetailQuery = (postId: string | string[] | undefined) => {
     postedBy->{
       _id,
       userName,
-      image
+      image,
+      type
     },
      likes,
     comments[]{
@@ -72,7 +75,8 @@ export const searchPostsQuery = (searchTerm: string | string[] | undefined) => {
     postedBy->{
       _id,
       userName,
-      image
+      image,
+      type
     },
 likes,
     comments[]{
@@ -81,7 +85,8 @@ likes,
       postedBy->{
       _id,
       userName,
-      image
+      image,
+      type
     },
     }
   }`;
@@ -114,7 +119,8 @@ export const userCreatedPostsQuery = (userId: string | string[] | undefined) => 
     postedBy->{
       _id,
       userName,
-      image
+      image,
+      type
     },
  likes,
 
@@ -124,7 +130,8 @@ export const userCreatedPostsQuery = (userId: string | string[] | undefined) => 
       postedBy->{
       _id,
       userName,
-      image
+      image,
+      type
     },
     }
   }`;
@@ -146,7 +153,8 @@ export const userLikedPostsQuery = (userId: string | string[] | undefined) => {
     postedBy->{
       _id,
       userName,
-      image
+      image,
+      type
     },
  likes,
 
@@ -156,7 +164,8 @@ export const userLikedPostsQuery = (userId: string | string[] | undefined) => {
       postedBy->{
       _id,
       userName,
-      image
+      image,
+      type
     },
     }
   }`;
@@ -178,7 +187,8 @@ export const topicPostsQuery = (topic: string | string[] | undefined) => {
     postedBy->{
       _id,
       userName,
-      image
+      image,
+      type
     },
  likes,
 
@@ -188,7 +198,8 @@ export const topicPostsQuery = (topic: string | string[] | undefined) => {
       postedBy->{
       _id,
       userName,
-      image
+      image,
+      type
     },
     }
   }`;
