@@ -110,6 +110,7 @@ const Navbar = () => {
                         {/*    onError={() => console.log('Login Failed')}*/}
                         {/*/>*/}
 
+
                     </div>
                     )}
             </div>
