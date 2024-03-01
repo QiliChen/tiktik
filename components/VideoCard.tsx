@@ -20,6 +20,7 @@ const VideoCard: NextPage<IProps> = ({ post: { caption, postedBy, video, _id, li
     const [isVideoMuted, setIsVideoMuted] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
 
+
     const onVideoPress = () => {
         if (playing) {
             videoRef?.current?.pause();
