@@ -2,12 +2,7 @@ export const allPostsQuery = () => {
   const query = `*[_type == "post"] | order(_createdAt desc){
     _id,
      caption,
-       video{
-        asset->{
-          _id,
-          url
-        }
-      },
+      video,
       userId,
       postedBy->{
         _id,
@@ -35,12 +30,7 @@ export const postDetailQuery = (postId: string | string[] | undefined) => {
   const query = `*[_type == "post" && _id == '${postId}']{
     _id,
      caption,
-       video{
-        asset->{
-          _id,
-          url
-        }
-      },
+      video,
       userId,
     postedBy->{
       _id,
@@ -65,13 +55,8 @@ export const searchPostsQuery = (searchTerm: string | string[] | undefined) => {
   const query = `*[_type == "post" && caption match '${searchTerm}*' || topic match '${searchTerm}*'] {
     _id,
      caption,
-       video{
-        asset->{
-          _id,
-          url
-        }
-      },
-      userId,
+     video,
+     userId,
     postedBy->{
       _id,
       userName,
@@ -109,12 +94,7 @@ export const userCreatedPostsQuery = (userId: string | string[] | undefined) => 
   const query = `*[ _type == 'post' && userId == '${userId}'] | order(_createdAt desc){
     _id,
      caption,
-       video{
-        asset->{
-          _id,
-          url
-        }
-      },
+      video,  
       userId,
     postedBy->{
       _id,
@@ -143,12 +123,7 @@ export const userLikedPostsQuery = (userId: string | string[] | undefined) => {
   const query = `*[_type == 'post' && '${userId}' in likes[]._ref ] | order(_createdAt desc) {
     _id,
      caption,
-       video{
-        asset->{
-          _id,
-          url
-        }
-      },
+      video,
       userId,
     postedBy->{
       _id,
@@ -177,12 +152,7 @@ export const topicPostsQuery = (topic: string | string[] | undefined) => {
   const query = `*[_type == "post" && topic match '${topic}*'] {
     _id,
      caption,
-       video{
-        asset->{
-          _id,
-          url
-        }
-      },
+      video,
       userId,
     postedBy->{
       _id,

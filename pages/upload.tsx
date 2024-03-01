@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import axios from 'axios';
+import OSS from 'ali-oss';
+
 
 import useAuthStore from '../store/authStore';
 import { BASE_URL } from '../utils';
@@ -25,44 +27,97 @@ const Upload = () => {
     if (!userProfile) router.push('/');
   }, [userProfile, router]);
 
+  const client = new OSS({
+    region: `${process.env.NEXT_PUBLIC_OSS_REGION}`,
+    accessKeyId: `${process.env.NEXT_PUBLIC_OSS_ACCESS_KEY_ID}`,
+    accessKeySecret: `${process.env.NEXT_PUBLIC_OSS_ACCESS_KEY_SECRET}`,
+    bucket: `${process.env.NEXT_PUBLIC_OSS_BUCKET}`,
+  });
+
   const uploadVideo = async (e: any) => {
-    const selectedFile = e.target.files[0];
+    // const selectedFile = e.target.files[0];
+    // const fileTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+    //
+    // // uploading asset to sanity
+    // if (fileTypes.includes(selectedFile.type)) {
+    //   setWrongFileType(false);
+    //   setLoading(true);
+    //
+    //   client.assets
+    //     .upload('file', selectedFile, {
+    //       contentType: selectedFile.type,
+    //       filename: selectedFile.name,
+    //     })
+    //     .then((data) => {
+    //       console.log(data)
+    //       setVideoAsset(data);
+    //       setLoading(false);
+    //     });
+    // } else {
+    //   setLoading(false);
+    //   setWrongFileType(true);
+    // }
+
+    const selectedFile = e.target.files ? e.target.files[0] : null;
     const fileTypes = ['video/mp4', 'video/webm', 'video/ogg'];
 
-    // uploading asset to sanity
-    if (fileTypes.includes(selectedFile.type)) {
+    if (selectedFile && fileTypes.includes(selectedFile.type)) {
       setWrongFileType(false);
       setLoading(true);
 
-      client.assets
-        .upload('file', selectedFile, {
-          contentType: selectedFile.type,
-          filename: selectedFile.name,
-        })
-        .then((data) => {
-          setVideoAsset(data);
-          setLoading(false);
-        });
+      try {
+        // 使用OSS的put方法上传文件
+        const extension = selectedFile.name.split('.').pop();
+        // 获取不含扩展名的文件名
+        const fileNameWithoutExtension = selectedFile.name.replace(/\.[^/.]+$/, "");
+        // 创建时间戳
+        const timestamp = new Date().getTime();
+        // 构造新的文件名，格式为“原始文件名-时间戳.扩展名”
+        const newFileName = `${fileNameWithoutExtension}-${timestamp}.${extension}`;
+
+        // 使用新的文件名和原始文件上传到OSS
+        const result = await client.put(newFileName, selectedFile);
+
+
+        // 构造一个与SanityFileAsset类型匹配的对象
+        // @ts-ignore
+        const fileAsset: SanityFileAsset = {
+          _createdAt: new Date().toISOString(),
+          _id: `file-${result.name}`,
+          _rev: '', // _rev 通常是由数据库管理的，这里你可能需要一个占位符或从服务器获取
+          _type: "sanity.fileAsset",
+          _updatedAt: new Date().toISOString(),
+          assetId: result.name.split('.')[0], // 假设你想要文件名作为assetId
+          extension: selectedFile.name.split('.').pop() || '',
+          mimeType: selectedFile.type,
+          originalFilename: selectedFile.name,
+          path: result.name,
+          sha1hash: '', // SHA1 hash通常是文件内容的摘要，需要特别处理
+          size: selectedFile.size,
+          uploadId: result.etag, // 假设使用etag作为uploadId
+          url: result.url
+        };
+
+        setVideoAsset(fileAsset);
+        setLoading(false);
+      } catch (error) {
+        console.error('Upload to OSS failed', error);
+        setLoading(false);
+      }
     } else {
-      setLoading(false);
       setWrongFileType(true);
+      setLoading(false);
     }
   };
 
   const handlePost = async () => {
-    if (caption && videoAsset?._id && topic) {
+    if (caption && videoAsset?.url && topic) { // 确保这里使用 videoAsset?.url
       setSavingPost(true);
 
       const doc = {
         _type: 'post',
         caption,
-        video: {
-          _type: 'file',
-          asset: {
-            _type: 'reference',
-            _ref: videoAsset?._id,
-          },
-        },
+        video: videoAsset.url, // 使用 videoAsset.url 而不是 videoAsset?._id
         userId: userProfile?._id,
         postedBy: {
           _type: 'postedBy',
@@ -71,11 +126,14 @@ const Upload = () => {
         topic,
       };
 
+      // 发送 POST 请求保存帖子信息
       await axios.post(`${BASE_URL}/api/post`, doc);
-        
+
       router.push('/');
     }
   };
+
+
 
   const handleDiscard = () => {
     setSavingPost(false);

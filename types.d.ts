@@ -1,11 +1,8 @@
+import * as url from "url";
+
 export interface Video {
     caption: string;
-    video: {
-        asset: {
-            _id: string;
-            url: string;
-        };
-    };
+    video: string
     _id: string;
     postedBy: {
         _id: string;

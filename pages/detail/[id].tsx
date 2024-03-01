@@ -91,7 +91,7 @@ const Detail = ({ postDetails }: IProps) => {
                   ref={videoRef}
                   onClick={onVideoClick}
                   loop
-                  src={post?.video?.asset.url}
+                  src={post?.video}
                   className=' h-full cursor-pointer'
                 ></video>
               </div>
