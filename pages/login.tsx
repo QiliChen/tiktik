@@ -173,6 +173,7 @@ const Login = () => {
                 </motion.div>
             </div>
             );
+
 };
 
 export default Login;
