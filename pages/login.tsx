@@ -109,70 +109,65 @@ const Login = () => {
     };
 
     return (
-            <div className="flex flex-col justify-center items-center h-screen">
-                <ToastContainer/>
-                <motion.div // 使用 motion.div 替代 div
-                    className="max-w-md w-full p-8 bg-white rounded-md"
-                    variants={containerVariants} // 应用动画变量
-                    initial="hidden" // 初始状态
-                    animate="visible" // 动画结束状态
-                >
-                    <div className="max-w-md w-full p-8 bg-white shadow-md rounded-md">
-                        <h1 className="text-3xl font-semibold mb-6 text-center">Login</h1>
-                        <div className="mb-4">
-                            <label htmlFor="username" className="block text-md font-medium text-gray-600 mb-1">
-                                Username:
-                            </label>
-                            <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                className="rounded-md outline-none text-md border-2 border-gray-200 p-2 w-full"
-                                placeholder="Enter your username"
-                                onChange={(e) => setUserInput({...userInput, username: e.target.value})}
-                            />
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="password" className="block text-md font-medium text-gray-600 mb-1">
-                                Password:
-                            </label>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                className="rounded-md outline-none text-md border-2 border-gray-200 p-2 w-full"
-                                placeholder="Enter your password"
-                                onChange={(e) => setUserInput({...userInput, password: e.target.value})}
-                            />
-                        </div>
-                        <div className="flex justify-between items-center space-x-8">
-                            <button
-                                className="rounded-md border-2 h-12 px-6 text-md font-semibold flex items-center gap-2 bg-blue-500 text-white hover:bg-blue-600 transition-colors"
-                                onClick={checkUserPassword}
-                            >
-                                <IoLogInOutline className="text-xl"/>
-                                <span>Login</span>
-                            </button>
-
-                            <button
-                                className="rounded-md border-2 h-12 px-6 text-md font-semibold flex items-center gap-2 bg-gray-200 hover:bg-gray-300 transition-colors"
-                                onClick={() => router.push("/register")}
-                            >
-                                <BiSolidUserAccount className="text-xl"/>
-                                <span>Register</span>
-                            </button>
-                        </div>
-
-                        <div className="mt-4">
-                            <GoogleLogin
-                                onSuccess={handleLoginSuccess}
-                                onError={() => console.log("Login Failed")}
-                            />
-                        </div>
+        <div className="flex flex-col justify-center items-center h-screen">
+            <ToastContainer/>
+            <motion.div
+                className="max-w-md w-full p-8 bg-white rounded-md"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, transition: { duration: 0.5 } }}
+            >
+                <div className="bg-white shadow-md rounded-md p-8">
+                    <h1 className="text-3xl font-semibold mb-6 text-center">Login</h1>
+                    <div className="mb-4">
+                        <label htmlFor="username" className="block text-md font-medium text-gray-600 mb-1">
+                            Username:
+                        </label>
+                        <input
+                            type="text"
+                            id="username"
+                            className="rounded-md outline-none text-md border-2 border-gray-200 p-2 w-full"
+                            placeholder="Enter your username"
+                            onChange={(e) => setUserInput({...userInput, username: e.target.value})}
+                        />
                     </div>
-                </motion.div>
-            </div>
-            );
+                    <div className="mb-4">
+                        <label htmlFor="password" className="block text-md font-medium text-gray-600 mb-1">
+                            Password:
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            className="rounded-md outline-none text-md border-2 border-gray-200 p-2 w-full"
+                            placeholder="Enter your password"
+                            onChange={(e) => setUserInput({...userInput, password: e.target.value})}
+                        />
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <button
+                            onClick={checkUserPassword}
+                            className="rounded-md bg-blue-500 text-white px-4 py-2 hover:bg-blue-600 transition-colors"
+                        >
+                            <IoLogInOutline className="inline mr-2" />
+                            Login
+                        </button>
+                        <button
+                            className="rounded-md bg-gray-200 hover:bg-gray-300 px-4 py-2 transition-colors"
+                            onClick={() => router.push('/register')}
+                        >
+                            <BiSolidUserAccount className="inline mr-2" />
+                            Register
+                        </button>
+                    </div>
+                    <div className="mt-4">
+                        <GoogleLogin
+                            onSuccess={(response) => createOrGetUser(response, addUser)}
+                            onError={() => console.log('Login Failed')}
+                        />
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+    );
 
 };
 

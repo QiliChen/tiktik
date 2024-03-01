@@ -189,128 +189,78 @@ const Register = () => {
         }
     };
 
-
     return (
         <motion.div
-            className="flex flex-col items-center justify-center min-h-screen"
-            variants={containerVariants}
+            className="flex flex-col items-center justify-center min-h-screen p-4"
             initial="hidden"
             animate="visible"
+            variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                    opacity: 1,
+                    transition: { duration: 0.5 }
+                }
+            }}
         >
-            <div className="flex justify-center items-center h-screen mt-[-50px]">
-                <div className="max-w-md p-8 bg-white shadow-md rounded-md">
-                    <ToastContainer
-                        position="top-center"
-                        autoClose={5000}
-                        hideProgressBar={false}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        pauseOnFocusLoss
-                        draggable
-                        pauseOnHover
-                        theme="light"
-                    />
-                    <h1 className="text-3xl font-semibold mb-6 text-center">Register</h1>
-
-                    <div className="flex gap-6">
-                        <div className="flex-1">
-                            <label htmlFor="username" className="block text-md font-medium text-gray-600 mb-1">
-                                Username:
-                            </label>
-                            <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                className="rounded-md outline-none text-md border-2 border-gray-200 p-2 w-full"
-                                placeholder="Enter your username"
-                                onChange={(e) => setUserInput({
-                                    ...userInput,
-                                    userName: e.target.value,
-                                    username: e.target.value
-                                })}
-                            />
-                        </div>
-
-                        <div className="flex-1">
-                            <label htmlFor="password" className="block text-md font-medium text-gray-600 mb-1">
-                                Password:
-                            </label>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                className="rounded-md outline-none text-md border-2 border-gray-200 p-2 w-full"
-                                placeholder="Enter your password"
-                                onChange={(e) => setUserInput({...userInput, password: e.target.value})}
-                            />
-                        </div>
+            <div className="w-full max-w-md bg-white shadow-md rounded-md p-4 sm:p-8">
+                <ToastContainer/>
+                <h1 className="text-2xl sm:text-3xl font-semibold mb-4 sm:mb-6 text-center">Register</h1>
+                <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="w-full">
+                        <label htmlFor="username"
+                               className="block text-md font-medium text-gray-600 mb-1">Username:</label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            className="rounded-md outline-none text-md border border-gray-200 p-2 w-full"
+                            placeholder="Enter your username"
+                            onChange={(e) => setUserInput({
+                                ...userInput,
+                                username: e.target.value,
+                                userName: e.target.value
+                            })}
+                        />
                     </div>
-
-                    <div className="mt-6 flex gap-6 ba">
-                        <div className="flex-1">
-                            <h2 className="text-xl font-semibold mb-4">Image Gallery</h2>
-                            <div className="grid grid-cols-3 gap-4 ">
-                                {images.map((imageUrl, index) => (
-                                    <div
-                                        key={index}
-                                        onClick={() => handleImageClick(imageUrl)}
-                                        className={`relative cursor-pointer w-12 h-12 ${
-                                            imageUrl === selectedImage ? 'border-2 border-blue-500' : ''
-                                        } rounded-full overflow-hidden`}
-                                    >
-                                        <div
-                                            className="absolute w-full h-full rounded-full bg-light-blue-500 opacity-50"></div>
-                                        <img
-                                            src={imageUrl}
-                                            alt={`Image ${index}`}
-                                            className="w-full h-full object-cover rounded-full"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="flex-1 flex flex-col justify-center items-center">
-                            <div className="mb-1">
-                                <div className="mb-1">
-                                    <div className="text-center">
-                                        <h2 className="text-md font-semibold mt-4">Your Image</h2>
-                                    </div>
-                                    <div className="flex items-center justify-center mt-2">
-                                        {selectedImage && (
-                                            <img
-                                                src={selectedImage}
-                                                alt="Selected Image"
-                                                className="w-16 h-16 object-cover rounded-full"
-                                            />
-                                        )}
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div className="mb-1"></div>
-
-                            <div className="mb-1">
-                                <button
-                                    className="rounded-md border-2 h-12 px-4 text-md font-semibold flex items-center gap-2 bg-gray-200 hover:bg-gray-300 "
-                                    onClick={clickRegister}
-                                >
-                                    <BiSolidUserAccount className="text-xl"/>
-                                    <span className={"w-16"}>Register</span>
-                                </button>
-                                <div className="mb-1"></div>
-                                <button
-                                    className="rounded-md border-2 h-12 px-4 text-md font-semibold flex items-center gap-2"
-                                    onClick={() => router.push("/login")}
-                                >
-                                    <IoMdArrowRoundBack className="text-xl"/>
-                                    <span className={"w-16"}>Back</span>
-                                </button>
-
-                            </div>
-                        </div>
+                    <div className="w-full">
+                        <label htmlFor="password"
+                               className="block text-md font-medium text-gray-600 mb-1">Password:</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            className="rounded-md outline-none text-md border border-gray-200 p-2 w-full"
+                            placeholder="Enter your password"
+                            onChange={(e) => setUserInput({...userInput, password: e.target.value})}
+                        />
                     </div>
+                </div>
+                <div className="mt-4 p-2 sm:p-4 bg-gray-50 rounded-lg shadow-inner">
+                    <h3 className="text-sm sm:text-md font-medium text-gray-700 mb-2">Select Your Avatar:</h3>
+                    <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                        {images.map((imageUrl, index) => (
+                            <div
+                                key={index}
+                                onClick={() => handleImageClick(imageUrl)}
+                                className={`cursor-pointer w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 bg-cover bg-center rounded-full overflow-hidden border-4 ${imageUrl === selectedImage ? 'border-blue-500 scale-105 sm:scale-110' : 'border-transparent'} transition-all`}
+                                style={{backgroundImage: `url(${imageUrl})`}}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-4">
+                    <button
+                        className="w-full sm:w-auto px-4 py-2 rounded-md text-md font-semibold bg-gray-200 hover:bg-gray-300 transition-colors"
+                        onClick={clickRegister}>
+                        <BiSolidUserAccount className="inline mr-2 text-lg"/> Register
+                    </button>
+                    <button
+                        className="w-full sm:w-auto px-4 py-2 rounded-md text-md font-semibold border border-gray-300 hover:bg-gray-100 transition-colors"
+                        onClick={() => router.push("/login")}>
+                        <IoMdArrowRoundBack className="inline mr-2 text-lg"/> Back
+                    </button>
                 </div>
             </div>
         </motion.div>
