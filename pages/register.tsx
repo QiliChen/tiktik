@@ -98,7 +98,7 @@ const Register = () => {
     });
 
 
-    function clickRegister() {
+    async function clickRegister() {
         let errorMessage = '';
         if (userInput.username === '' || userInput.username.length < 3 || userInput.username.length > 15) {
             errorMessage = 'Username must be between 3 and 15 characters';
@@ -107,7 +107,7 @@ const Register = () => {
         }else if (selectedImage === null) {
             errorMessage = 'Please select an image';
         } else {
-            setUserInput({...userInput, image: selectedImage, userName: userInput.username});
+            await setUserInput({...userInput, image: selectedImage, userName: userInput.username});
             checkUserPassword();
             return; // 如果没有错误，直接返回，防止执行以下的错误处理代码
         }
@@ -170,7 +170,7 @@ const Register = () => {
             _type: 'user',
             userName: userInput.userName,
             type: 'Web',
-            image: userInput.image,
+            image: selectedImage,
             password: userInput.password
         };
 
