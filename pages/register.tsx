@@ -12,6 +12,9 @@ import {IoMdArrowRoundBack} from "react-icons/io";
 import {generateRandomString} from "../utils/tools";
 import useAuthStore from "../store/authStore";
 import {motion} from "framer-motion";
+import { FiUpload } from "react-icons/fi";
+import {uploadToOSS} from "./api/oss/uploadToOSS";
+
 
 
 interface User {
@@ -21,6 +24,7 @@ interface User {
     type: string;
     image: string;
 }
+
 
 
 const Register = () => {
@@ -56,6 +60,31 @@ const Register = () => {
     const handleImageClick = (imageUrl) => {
         setSelectedImage(imageUrl);
         setUserInput({...userInput, image: imageUrl})
+    };
+
+    const handleImageUpload = async (e: { target: { files: any[]; }; }) => { // TypeScript 类型注解已移除以简化示例
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+            try {
+                // 检查所选文件是否为图片
+                const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+                if (!allowedExtensions.exec(selectedFile.name)) {
+                    throw new Error('Unsupported file type. Please select an image.');
+                }
+                // 直接使用 uploadToOSS 函数上传文件
+                const ossImageUrl = await uploadToOSS(selectedFile); // 假设 uploadToOSS 接受 File 对象
+
+                console.log('Uploaded image URL:', ossImageUrl);
+                // 设置上传后的图片 URL 为选中的图片
+                // @ts-ignore
+                setSelectedImage(ossImageUrl);
+                setUserInput({ ...userInput, image: ossImageUrl }); // 更新用户信息中的图片 URL
+
+            } catch (error) {
+                console.error('Error uploading image:', error);
+                toast.error('Error uploading image');
+            }
+        }
     };
 
 
@@ -246,6 +275,26 @@ const Register = () => {
                                 style={{backgroundImage: `url(${imageUrl})`}}
                             />
                         ))}
+                        {selectedImage ? (
+                            <div
+                                className={`cursor-pointer w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 bg-cover bg-center rounded-full overflow-hidden border-4 border-blue-500 scale-105 sm:scale-110 transition-all`}
+                                style={{backgroundImage: `url(${selectedImage})`}}
+                            />
+                        ) : (
+                            <div
+                                className="cursor-pointer w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 flex justify-center items-center rounded-full overflow-hidden border-4 border-dashed border-gray-300 transition-all hover:border-blue-500 hover:scale-105 sm:hover:scale-110"
+                                onClick={() => document.getElementById('avatarUpload').click()}
+                            >
+                                <FiUpload className="text-2xl text-gray-400"/> {/* 上传图标 */}
+                                <input
+                                    type="file"
+                                    id="avatarUpload"
+                                    onChange={handleImageUpload}
+                                    accept="image/*"
+                                    className="hidden"
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
 

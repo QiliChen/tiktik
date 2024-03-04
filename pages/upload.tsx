@@ -73,7 +73,7 @@ const Upload = () => {
         // 创建时间戳
         const timestamp = new Date().getTime();
         // 构造新的文件名，格式为“原始文件名-时间戳.扩展名”
-        const newFileName = `${fileNameWithoutExtension}-${timestamp}.${extension}`;
+        const newFileName = `video/${fileNameWithoutExtension}-${timestamp}.${extension}`;
 
         // 使用新的文件名和原始文件上传到OSS
         const result = await client.put(newFileName, selectedFile);

@@ -92,21 +92,12 @@ const Login = () => {
         }
     };
 
-    const containerVariants = {
-        hidden: {
-            opacity: 0
-        },
-        visible: {
-            opacity: 1,
-            transition: {duration: 0.5} // 动画过渡属性
-        }
-    };
-
     // @ts-ignore
     const handleLoginSuccess = async (response) => {
         await createOrGetUser(response, addUser); // 处理用户登录信息
         extracted();
     };
+
 
     return (
         <div className="flex flex-col justify-center items-center h-screen">
@@ -160,7 +151,7 @@ const Login = () => {
                     </div>
                     <div className="mt-4">
                         <GoogleLogin
-                            onSuccess={(response) => createOrGetUser(response, addUser)}
+                            onSuccess={handleLoginSuccess}
                             onError={() => console.log('Login Failed')}
                         />
                     </div>
