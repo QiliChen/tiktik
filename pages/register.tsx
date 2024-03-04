@@ -47,6 +47,9 @@ const Register = () => {
     const [images, setImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [error, setError] = useState<string>('')
+    const [uploadedImage, setUploadedImage] = useState(null);
+    const [isLocked, setIsLocked] = useState(false);
+    const [uploadOnce, setUploadOnce] = useState(true);
 
     const router = useRouter();
 
@@ -62,7 +65,7 @@ const Register = () => {
         setUserInput({...userInput, image: imageUrl})
     };
 
-    const handleImageUpload = async (e: { target: { files: any[]; }; }) => { // TypeScript 类型注解已移除以简化示例
+    const handleImageUpload = async (e: { target: { files: any[]; }; }) => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
             try {
@@ -71,21 +74,19 @@ const Register = () => {
                 if (!allowedExtensions.exec(selectedFile.name)) {
                     throw new Error('Unsupported file type. Please select an image.');
                 }
-                // 直接使用 uploadToOSS 函数上传文件
-                const ossImageUrl = await uploadToOSS(selectedFile); // 假设 uploadToOSS 接受 File 对象
-
-                console.log('Uploaded image URL:', ossImageUrl);
-                // 设置上传后的图片 URL 为选中的图片
+                const ossImageUrl = await uploadToOSS(selectedFile); // 假设 uploadToOSS 是上传图片的函数
                 // @ts-ignore
-                setSelectedImage(ossImageUrl);
-                setUserInput({ ...userInput, image: ossImageUrl }); // 更新用户信息中的图片 URL
-
+                setUploadedImage(ossImageUrl); // 更新上传的图片 URL
+                // @ts-ignore
+                setSelectedImage(ossImageUrl); // 清除之前选中的预设图片状态
+                setIsLocked(true); // 锁定预设图片的选择
             } catch (error) {
                 console.error('Error uploading image:', error);
                 toast.error('Error uploading image');
             }
         }
     };
+
 
 
     const [userInput, setUserInput] = React.useState<User>({
@@ -103,7 +104,7 @@ const Register = () => {
             errorMessage = 'Username must be between 3 and 15 characters';
         } else if (userInput.password === '' || userInput.password.length < 3 || userInput.password.length > 15) {
             errorMessage = 'Password must be between 3 and 15 characters';
-        } else if (selectedImage === null) {
+        }else if (selectedImage === null) {
             errorMessage = 'Please select an image';
         } else {
             setUserInput({...userInput, image: selectedImage, userName: userInput.username});
@@ -218,6 +219,27 @@ const Register = () => {
         }
     };
 
+    function clickUpload() {
+        if (uploadOnce) {
+            // @ts-ignore
+            document.getElementById('avatarUpload').click();
+
+            setUploadOnce(false);
+        }else {
+            toast("You can only upload one image", {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
+        }
+    }
+
     return (
         <motion.div
             className="flex flex-col items-center justify-center min-h-screen p-4"
@@ -270,31 +292,32 @@ const Register = () => {
                         {images.map((imageUrl, index) => (
                             <div
                                 key={index}
-                                onClick={() => handleImageClick(imageUrl)}
-                                className={`cursor-pointer w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 bg-cover bg-center rounded-full overflow-hidden border-4 ${imageUrl === selectedImage ? 'border-blue-500 scale-105 sm:scale-110' : 'border-transparent'} transition-all`}
+                                onClick={() => !isLocked && setSelectedImage(imageUrl)} // 如果 isLocked 为 true，则禁用点击事件
+                                className={`cursor-pointer w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 bg-cover bg-center rounded-full overflow-hidden border-4 ${imageUrl === selectedImage ? 'border-blue-500 scale-105 sm:scale-110' : 'border-transparent'} transition-all ${isLocked ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 style={{backgroundImage: `url(${imageUrl})`}}
                             />
                         ))}
-                        {selectedImage ? (
-                            <div
-                                className={`cursor-pointer w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 bg-cover bg-center rounded-full overflow-hidden border-4 border-blue-500 scale-105 sm:scale-110 transition-all`}
-                                style={{backgroundImage: `url(${selectedImage})`}}
-                            />
-                        ) : (
-                            <div
-                                className="cursor-pointer w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 flex justify-center items-center rounded-full overflow-hidden border-4 border-dashed border-gray-300 transition-all hover:border-blue-500 hover:scale-105 sm:hover:scale-110"
-                                onClick={() => document.getElementById('avatarUpload').click()}
-                            >
-                                <FiUpload className="text-2xl text-gray-400"/> {/* 上传图标 */}
-                                <input
-                                    type="file"
-                                    id="avatarUpload"
-                                    onChange={handleImageUpload}
-                                    accept="image/*"
-                                    className="hidden"
+                        <div
+                            className={`cursor-pointer w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 flex justify-center items-center rounded-full overflow-hidden border-4 ${uploadedImage ? 'border-blue-500 scale-105 sm:scale-110' : 'border-dashed border-gray-300'} transition-all hover:border-blue-500 hover:scale-105 sm:hover:scale-110`}
+                            onClick={clickUpload}
+                        >
+                            {uploadedImage ? (
+                                <div
+                                    className="w-full h-full bg-cover bg-center rounded-full"
+                                    style={{backgroundImage: `url(${uploadedImage})`}}
                                 />
-                            </div>
-                        )}
+                            ) : (
+                                <FiUpload className="text-2xl text-gray-400"/>
+                            )}
+                            <input
+                                type="file"
+                                id="avatarUpload"
+                                onChange={handleImageUpload}
+                                accept="image/*"
+                                className="hidden"
+                            />
+                        </div>
+
                     </div>
                 </div>
 

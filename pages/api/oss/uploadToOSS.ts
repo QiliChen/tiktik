@@ -42,7 +42,7 @@ export async function uploadToOSS(file: File): Promise<string> {
         const extension = file.name.split('.').pop();
         const fileNameWithoutExtension = file.name.replace(/\.[^/.]+$/, "");
         const timestamp = new Date().getTime();
-        const newFileName = `header-/${timestamp}.${extension}`;
+        const newFileName = `header/header-${timestamp}.${extension}`;
 
         // 直接使用传入的 File 对象上传到 OSS
         const result = await client.put(newFileName, file);
