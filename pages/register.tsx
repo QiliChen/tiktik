@@ -68,17 +68,40 @@ const Register = () => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
             try {
-                // 检查所选文件是否为图片
                 const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
                 if (!allowedExtensions.exec(selectedFile.name)) {
                     throw new Error('Unsupported file type. Please select an image.');
                 }
-                const ossImageUrl = await uploadToOSS(selectedFile); // 假设 uploadToOSS 是上传图片的函数
-                // @ts-ignore
-                setUploadedImage(ossImageUrl); // 更新上传的图片 URL
-                // @ts-ignore
-                setSelectedImage(ossImageUrl); // 清除之前选中的预设图片状态
-                setIsLocked(true); // 锁定预设图片的选择
+
+                const reader = new FileReader();
+                reader.onload = async (event) => {
+                    const img = new Image();
+                    img.onload = async () => {
+                        const minSide = Math.min(img.width, img.height);
+                        const offsetX = (img.width - minSide) / 2;
+                        const offsetY = (img.height - minSide) / 2;
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = minSide;
+                        canvas.height = minSide;
+                        const ctx = canvas.getContext('2d');
+                        // @ts-ignore
+                        ctx.drawImage(img, offsetX, offsetY, minSide, minSide, 0, 0, minSide, minSide);
+                        canvas.toBlob(async (blob) => {
+                            // @ts-ignore
+                            const newFile = new File([blob], selectedFile.name, { type: 'image/png' });
+                            const ossImageUrl = await uploadToOSS(newFile);
+                            // @ts-ignore
+                            setUploadedImage(ossImageUrl);
+                            // @ts-ignore
+                            setSelectedImage(ossImageUrl);
+                            setIsLocked(true);
+                        }, 'image/png');
+                    };
+                    // @ts-ignore
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(selectedFile);
             } catch (error) {
                 console.error('Error uploading image:', error);
                 toast.error('Error uploading image');
