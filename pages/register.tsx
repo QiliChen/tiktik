@@ -49,7 +49,6 @@ const Register = () => {
     const [error, setError] = useState<string>('')
     const [uploadedImage, setUploadedImage] = useState(null);
     const [isLocked, setIsLocked] = useState(false);
-    const [uploadOnce, setUploadOnce] = useState(true);
 
     const router = useRouter();
 
@@ -220,11 +219,9 @@ const Register = () => {
     };
 
     function clickUpload() {
-        if (uploadOnce) {
+        if (uploadedImage === null) {
             // @ts-ignore
             document.getElementById('avatarUpload').click();
-
-            setUploadOnce(false);
         }else {
             toast("You can only upload one image", {
                 position: "top-center",
