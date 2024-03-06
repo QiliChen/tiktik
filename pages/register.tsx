@@ -1,21 +1,18 @@
-import React, {useEffect, useState} from "react";
-import {BiSolidUserAccount} from "react-icons/bi";
-import {BASE_URL} from "../utils";
-import axios from "axios";
-import {router} from "next/client";
-import data from '../utils/data.json';
-import {useRouter} from 'next/router';
-
-import {ToastContainer, toast, Bounce} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import {IoMdArrowRoundBack} from "react-icons/io";
-import {generateRandomString} from "../utils/tools";
-import useAuthStore from "../store/authStore";
+import {Bounce, toast, ToastContainer} from "react-toastify";
 import {motion} from "framer-motion";
-import { FiUpload } from "react-icons/fi";
+import Image from "next/image";
+import Logo from "../utils/tiktik-logo.png";
+import {GoogleLogin} from "@react-oauth/google";
+import React, {useEffect, useState} from "react";
+import router, {useRouter} from "next/router";
+import useAuthStore from "../store/authStore";
+import data from "../utils/data.json";
 import {uploadToOSS} from "./api/oss/uploadToOSS";
-
-
+import axios from "axios";
+import {BASE_URL} from "../utils";
+import {generateRandomString} from "../utils/tools";
+import {FiUpload} from "react-icons/fi";
+import 'react-toastify/dist/ReactToastify.css';
 
 interface User {
     userName: string;
@@ -49,6 +46,7 @@ const Register = () => {
     const [error, setError] = useState<string>('')
     const [uploadedImage, setUploadedImage] = useState(null);
     const [isLocked, setIsLocked] = useState(false);
+    const [userRePassword, setUserRePassword] = useState('');
 
     const router = useRouter();
 
@@ -75,7 +73,7 @@ const Register = () => {
 
                 const reader = new FileReader();
                 reader.onload = async (event) => {
-                    const img = new Image();
+                    const img = document.createElement('img');
                     img.onload = async () => {
                         const minSide = Math.min(img.width, img.height);
                         const offsetX = (img.width - minSide) / 2;
@@ -124,6 +122,8 @@ const Register = () => {
         let errorMessage = '';
         if (userInput.username === '' || userInput.username.length < 3 || userInput.username.length > 15) {
             errorMessage = 'Username must be between 3 and 15 characters';
+        } else if (userRePassword !== userInput.password) {
+            errorMessage = 'The passwords entered twice are inconsistent';
         } else if (userInput.password === '' || userInput.password.length < 3 || userInput.password.length > 15) {
             errorMessage = 'Password must be between 3 and 15 characters';
         }else if (selectedImage === null) {
@@ -196,6 +196,8 @@ const Register = () => {
             password: userInput.password
         };
 
+        console.log(user);
+
         try {
             const axiosResponse = await axios.post(`${BASE_URL}/api/auth`, user);
             if (axiosResponse.status === 200) {
@@ -231,16 +233,6 @@ const Register = () => {
         }
     };
 
-    const containerVariants = {
-        hidden: {
-            opacity: 0
-        },
-        visible: {
-            opacity: 1,
-            transition: {duration: 0.5} // 动画过渡属性
-        }
-    };
-
     function clickUpload() {
         if (uploadedImage === null) {
             // @ts-ignore
@@ -260,104 +252,149 @@ const Register = () => {
         }
     }
 
+
     return (
-        <motion.div
-            className="flex flex-col items-center justify-center min-h-screen p-4"
-            initial="hidden"
-            animate="visible"
-            variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                    opacity: 1,
-                    transition: { duration: 0.5 }
-                }
-            }}
-        >
-            <div className="w-full max-w-md bg-white shadow-md rounded-md p-4 sm:p-8">
-                <ToastContainer/>
-                <h1 className="text-2xl sm:text-3xl font-semibold mb-4 sm:mb-6 text-center">Register</h1>
-                <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="w-full">
-                        <label htmlFor="username"
-                               className="block text-md font-medium text-gray-600 mb-1">Username:</label>
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            className="rounded-md outline-none text-md border border-gray-200 p-2 w-full"
-                            placeholder="Enter your username"
-                            onChange={(e) => setUserInput({
-                                ...userInput,
-                                username: e.target.value,
-                                userName: e.target.value
-                            })}
-                        />
-                    </div>
-                    <div className="w-full">
-                        <label htmlFor="password"
-                               className="block text-md font-medium text-gray-600 mb-1">Password:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            className="rounded-md outline-none text-md border border-gray-200 p-2 w-full"
-                            placeholder="Enter your password"
-                            onChange={(e) => setUserInput({...userInput, password: e.target.value})}
-                        />
-                    </div>
-                </div>
-                <div className="mt-4 p-2 sm:p-4 bg-gray-50 rounded-lg shadow-inner">
-                    <h3 className="text-sm sm:text-md font-medium text-gray-700 mb-2">Select Your Avatar:</h3>
-                    <div className="grid grid-cols-3 gap-2 sm:gap-4">
-                        {images.map((imageUrl, index) => (
-                            <div
-                                key={index}
-                                onClick={() => !isLocked && setSelectedImage(imageUrl)} // 如果 isLocked 为 true，则禁用点击事件
-                                className={`cursor-pointer w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 bg-cover bg-center rounded-full overflow-hidden border-4 ${imageUrl === selectedImage ? 'border-blue-500 scale-105 sm:scale-110' : 'border-transparent'} transition-all ${isLocked ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                style={{backgroundImage: `url(${imageUrl})`}}
-                            />
-                        ))}
-                        <div
-                            className={`cursor-pointer w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 flex justify-center items-center rounded-full overflow-hidden border-4 ${uploadedImage ? 'border-blue-500 scale-105 sm:scale-110' : 'border-dashed border-gray-300'} transition-all hover:border-blue-500 hover:scale-105 sm:hover:scale-110`}
-                            onClick={clickUpload}
-                        >
-                            {uploadedImage ? (
-                                <div
-                                    className="w-full h-full bg-cover bg-center rounded-full"
-                                    style={{backgroundImage: `url(${uploadedImage})`}}
+        <div className="relative py-3 sm:max-w-xl sm:mx-auto w-3/5">
+            <ToastContainer/>
+            <motion.div
+                className="max-w-md w-full p-8 bg-white rounded-md"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1, transition: { duration: 0.5 } }}
+            >
+                <div
+                    className="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10"
+                >
+                    <div className="max-w-md mx-auto">
+                        <div className="flex items-center space-x-5 justify-center">
+                            <div className='w-[100px] md:w-[129px] md:h-[30px] h-[38px]'>
+                                <Image
+                                    src={Logo}
+                                    alt='logo'
+                                    layout='responsive'
                                 />
-                            ) : (
-                                <FiUpload className="text-2xl text-gray-400"/>
-                            )}
+                            </div>
+                        </div>
+                        <div className="mt-5">
+                            <label
+                                className="font-semibold text-sm text-gray-600 pb-1 block"
+                                htmlFor="login"
+                            >Username</label
+                            >
                             <input
-                                type="file"
-                                id="avatarUpload"
-                                onChange={handleImageUpload}
-                                accept="image/*"
-                                className="hidden"
+                                className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                                type="text"
+                                id="login"
+                                onChange={(e) => setUserInput({...userInput, username: e.target.value, userName: e.target.value})}
                             />
+                            <label
+                                className="font-semibold text-sm text-gray-600 pb-1 block"
+                                htmlFor="password"
+                            >Password</label
+                            >
+                            <input
+                                className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                                type="password"
+                                id="password"
+                                onChange={(e) => setUserInput({...userInput, password: e.target.value})}
+                            />
+                            <label
+                                className="font-semibold text-sm text-gray-600 pb-1 block"
+                                htmlFor="password"
+                            >Confirm Password</label>
+                            <input
+                                className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
+                                type="password"
+                                id="RePassword"
+                                onChange={(e) => setUserRePassword(e.target.value)}
+                            />
+                        </div>
+                        <div className="text-right mb-2">
+                            <a
+                                className="text-xs font-display font-semibold text-gray-500 hover:text-gray-600 cursor-pointer"
+                                href="#"
+                            >
+                            </a>
+                        </div>
+                        <div className="text-right mb-2">
+                            <h3 className="text-xs text-center sm:text-sm font-medium text-gray-700 mb-2 h-8" >Select Your Avatar:</h3>
+                        </div>
+                        <div className="flex justify-center w-full items-center">
+                            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                                {images.map((imageUrl, index) => (
+                                    <div
+                                        key={index}
+                                        onClick={() => !isLocked && setSelectedImage(imageUrl)}
+                                        className={`cursor-pointer w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 bg-cover bg-center rounded-full overflow-hidden border-4 ${imageUrl === selectedImage ? 'border-blue-500 scale-105 sm:scale-110' : 'border-transparent'} transition-all ${isLocked ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        style={{backgroundImage: `url(${imageUrl})`}}
+                                    />
+                                ))}
+                                <div
+                                    className={`cursor-pointer w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 flex justify-center items-center rounded-full overflow-hidden border-4 ${uploadedImage ? 'border-blue-500 scale-105 sm:scale-110' : 'border-dashed border-gray-300'} transition-all hover:border-blue-500 hover:scale-105 sm:hover:scale-110`}
+                                    onClick={clickUpload}
+                                >
+                                    {uploadedImage ? (
+                                        <div
+                                            className="w-full h-full bg-cover bg-center rounded-full"
+                                            style={{backgroundImage: `url(${uploadedImage})`}}
+                                        />
+                                    ) : (
+                                        <FiUpload className="text-xl text-gray-400"/>
+                                    )}
+                                    <input
+                                        type="file"
+                                        id="avatarUpload"
+                                        onChange={handleImageUpload}
+                                        accept="image/*"
+                                        className="hidden"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mt-5">
+                            <button
+                                className="py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+                                type="submit"
+                                onClick={clickRegister}
+                            >
+                                Register
+                            </button>
+                        </div>
+                        <div className="flex items-center justify-center mt-2"
+                             onClick={() => router.push('/login')}
+
+
+                        >
+                            <span className="border-b dark:border-gray-600 items-center"></span>
+                            <button
+                                className="overflow-hidden w-24 p-1 h-8  border-none rounded-md  text-xs font-bold cursor-pointer relative z-10 group"
+                            >
+                                Back
+                                <span
+                                    className="absolute w-28 h-24 -top-6 -left-2 bg-white rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-left"
+                                ></span>
+                                <span
+                                    className="absolute w-28 h-24 -top-6 -left-2 bg-blue-400 rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-700 duration-700 origin-left"
+                                ></span>
+                                <span
+                                    className="absolute w-28 h-24 -top-6 -left-2 bg-blue-700 rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-1000 duration-500 origin-left"
+                                ></span>
+                                <span
+                                    className="group-hover:opacity-100 group-hover:duration-1000 duration-100 opacity-0 absolute top-1.5 left-4 z-10 text-sm text-white"
+                                >← Log in</span
+                                >
+
+                            </button>
+
+
                         </div>
 
                     </div>
                 </div>
+            </motion.div>
+        </div>
 
-
-                <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-4">
-                    <button
-                        className="w-full sm:w-auto px-4 py-2 rounded-md text-md font-semibold bg-gray-200 hover:bg-gray-300 transition-colors"
-                        onClick={clickRegister}>
-                        <BiSolidUserAccount className="inline mr-2 text-lg"/> Register
-                    </button>
-                    <button
-                        className="w-full sm:w-auto px-4 py-2 rounded-md text-md font-semibold border border-gray-300 hover:bg-gray-100 transition-colors"
-                        onClick={() => router.push("/login")}>
-                        <IoMdArrowRoundBack className="inline mr-2 text-lg"/> Back
-                    </button>
-                </div>
-            </div>
-        </motion.div>
-    );
-
+    )
 }
 
-export default Register;
+export default Register

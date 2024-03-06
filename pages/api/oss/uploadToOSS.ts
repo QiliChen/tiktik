@@ -22,6 +22,8 @@ export  async function otherUploadToOSS(imageUrl: string): Promise<string> {
         const blob = await response.blob();
         const file = new File([blob], imageName, { type: blob.type });
 
+        console.log('newFileName:', newFileName);
+        console.log('file:', file);
         // 使用 OSS 客户端上传文件
         const result = await client.put(newFileName, file);
 
