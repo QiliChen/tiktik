@@ -27,13 +27,33 @@ const Login = () => {
     });
 
     const {addUser, isLoggedIn} = useAuthStore();
+    const [localUser, setLocalUser] = React.useState<User | null>(null);
     const router = useRouter();
+    const [localUserImg, setLocalUserImg] = React.useState<string | null>(null);
+    const [registerLogin, setRegisterLogin] = React.useState<boolean>(false);
 
     useEffect(() => {
         if (isLoggedIn()) {
             router.push('/');
         }
     }, [isLoggedIn, router]);
+
+    useEffect(() => {
+        const userString = localStorage.getItem("user"); // 获取localStorage中的"user"项
+
+        if (userString) { // 确保"user"项存在且不为null或undefined
+            setRegisterLogin(true);
+            const userObject = JSON.parse(userString); // 解析"user"项的字符串
+            setLocalUser(userObject); // 设置用户对象状态
+
+            if (userObject.image) { // 检查解析后的用户对象是否包含image属性
+                setLocalUserImg(userObject.image); // 如果存在，则设置用户图像状态
+            }
+        }else {
+            setRegisterLogin(false);
+        }
+    }, []);
+
 
     function extracted() {
         toast("login successful! ", {
@@ -50,7 +70,7 @@ const Login = () => {
         });
     }
 
-    const checkUserPassword = async () => {
+    const checkUserInput = () => {
         if (!userInput.username.trim() || !userInput.password.trim()) {
             toast("Username and password are required.", {
                 position: "top-center",
@@ -65,6 +85,10 @@ const Login = () => {
             });
             return;
         }
+        checkUserPassword();
+    }
+
+    const checkUserPassword = async () => {
 
         const response = await axios.get(`${BASE_URL}/api/users`);
         const users = response.data;
@@ -101,6 +125,28 @@ const Login = () => {
     };
 
 
+    function backUserClick() {
+        // 假设localUser中存储了用户名和密码
+        if (localUser) {
+
+            setUserInput({
+                ...userInput,
+                username: localUser.userName, // 确保这里的属性与你的state结构匹配
+                password: localUser.password, // 同上
+                userName: localUser.userName, // 同上
+                type: localUser.type, // 同上
+            });
+
+            userInput.username = localUser.userName; // 确保这里的属性与你的state结构匹配
+            userInput.password = localUser.password; // 同上
+
+            // 然后自动发起登录请求
+            checkUserPassword();
+            localStorage.removeItem("user")
+        }
+    }
+
+
     return (
         <div className="relative py-3 sm:max-w-xl sm:mx-auto w-3/5">
             <ToastContainer/>
@@ -114,13 +160,13 @@ const Login = () => {
             >
                 <div className="max-w-md mx-auto">
                     <div className="flex items-center space-x-5 justify-center">
-                            <div className='w-[100px] md:w-[129px] md:h-[30px] h-[38px]'>
-                                <Image
-                                    src={Logo}
-                                    alt='logo'
-                                    layout='responsive'
-                                />
-                            </div>
+                        <div className='w-[100px] md:w-[129px] md:h-[30px] h-[38px]'>
+                            <Image
+                                src={Logo}
+                                alt='logo'
+                                layout='responsive'
+                            />
+                        </div>
                     </div>
                     <div className="mt-5">
                         <label
@@ -162,11 +208,23 @@ const Login = () => {
                             />
                         </div>
                     </div>
+
+                    {registerLogin && (
+                        <div className="flex justify-center w-full items-center mt-5">
+                            <button
+                                className="flex justify-center items-center w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg gap-4"
+                                onClick={backUserClick}
+                            >
+                                <img src={localUserImg || 'path_to_default_avatar'} alt="Avatar" className="w-6 h-6 rounded-full"/>
+                                {`Use ${localUser?.userName} to Login`}
+                            </button>
+                        </div>
+                    )}
                     <div className="mt-5">
                         <button
                             className="py-2 px-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
                             type="submit"
-                            onClick={checkUserPassword}
+                            onClick={checkUserInput}
                         >
                             Log in
                         </button>

@@ -196,11 +196,11 @@ const Register = () => {
             password: userInput.password
         };
 
-        console.log(user);
 
         try {
             const axiosResponse = await axios.post(`${BASE_URL}/api/auth`, user);
             if (axiosResponse.status === 200) {
+                localStorage.setItem('user', JSON.stringify(user));
                 // 在重定向之前显示注册成功的弹窗提示
                 toast("Registration successful! Redirecting to login...", {
                     position: "top-center",
@@ -371,13 +371,13 @@ const Register = () => {
                             >
                                 Back
                                 <span
-                                    className="absolute w-28 h-24 -top-6 -left-2 bg-white rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-left"
+                                    className="absolute w-28 h-24 -top-6 -left-2 bg-white rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-right"
                                 ></span>
                                 <span
-                                    className="absolute w-28 h-24 -top-6 -left-2 bg-blue-400 rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-700 duration-700 origin-left"
+                                    className="absolute w-28 h-24 -top-6 -left-2 bg-blue-400 rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-700 duration-700 origin-right"
                                 ></span>
                                 <span
-                                    className="absolute w-28 h-24 -top-6 -left-2 bg-blue-700 rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-1000 duration-500 origin-left"
+                                    className="absolute w-28 h-24 -top-6 -left-2 bg-blue-700 rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-1000 duration-500 origin-right"
                                 ></span>
                                 <span
                                     className="group-hover:opacity-100 group-hover:duration-1000 duration-100 opacity-0 absolute top-1.5 left-4 z-10 text-sm text-white"
