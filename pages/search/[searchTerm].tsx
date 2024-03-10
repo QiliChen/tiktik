@@ -10,8 +10,11 @@ import VideoCard from '../../components/VideoCard';
 import useAuthStore from '../../store/authStore';
 import { BASE_URL } from '../../utils';
 import { IUser, Video } from '../../types';
+import { useTranslation } from 'next-i18next'
+import {serverSideTranslations} from "next-i18next/serverSideTranslations";
 
 const Search = ({ videos }: { videos: Video[] }) => {
+  const { t } = useTranslation('common');
   const [isAccounts, setIsAccounts] = useState(false);
   const { allUsers }: { allUsers: IUser[] } = useAuthStore();
 
@@ -26,10 +29,10 @@ const Search = ({ videos }: { videos: Video[] }) => {
     <div className='w-full  '>
       <div className='flex gap-10 mb-10 border-b-2 border-gray-200 md:fixed z-50 bg-white w-full'>
         <p onClick={() => setIsAccounts(true)} className={`text-xl  font-semibold cursor-pointer ${accounts} mt-2`}>
-          Accounts
+          {t('common:search-accounts')}
         </p>
         <p className={`text-xl font-semibold cursor-pointer ${isVideos} mt-2`} onClick={() => setIsAccounts(false)}>
-          Videos
+          {t('common:search-video')}
         </p>
       </div>
       {isAccounts ? (
@@ -55,7 +58,7 @@ const Search = ({ videos }: { videos: Video[] }) => {
               </Link>
             ))
           ) : (
-            <NoResults text={`No Account Results for ${searchTerm}`} />
+              <NoResults text={`${t('common:search-accounts-no')} ${searchTerm}`} />
           )}
         </div>
       ) : (
@@ -65,7 +68,7 @@ const Search = ({ videos }: { videos: Video[] }) => {
               <VideoCard post={post} key={idx} />
             ))
           ) : (
-            <NoResults text={`No Video Results for ${searchTerm}`} />
+              <NoResults text={`${t('common:search-video-no')} ${searchTerm}`} />
           )}
         </div>
       )}
@@ -74,15 +77,23 @@ const Search = ({ videos }: { videos: Video[] }) => {
 };
 
 export const getServerSideProps = async ({
-  params: { searchTerm },
-}: {
+                                           params: { searchTerm },
+                                           locale, // 从 Next.js 的上下文中获取当前的语言环境
+                                         }: {
   params: { searchTerm: string };
+  locale: string;
 }) => {
+  // 获取与搜索术语相关的数据
   const res = await axios.get(`${BASE_URL}/api/search/${searchTerm}`);
 
+  // 使用 serverSideTranslations 加载特定的命名空间翻译资源
+  const i18nProps = await serverSideTranslations(locale, ['common']);
+
   return {
-    props: { videos: res.data },
+    props: {
+      videos: res.data,
+      ...i18nProps, // 将翻译资源传递给页面的 props
+    },
   };
 };
-
 export default Search;

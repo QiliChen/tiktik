@@ -1,8 +1,7 @@
-import Link from "next/link";
 import Image from "next/image";
 import Logo from "../utils/tiktik-logo.png";
 import React, {useEffect} from "react";
-import router, {useRouter} from "next/router";
+import {useRouter} from "next/router";
 import useAuthStore from "../store/authStore";
 import {Bounce, toast, ToastContainer} from "react-toastify";
 import axios from "axios";
@@ -10,6 +9,9 @@ import {BASE_URL, createOrGetUser} from "../utils";
 import { motion } from "framer-motion";
 import { GoogleLogin } from "@react-oauth/google";
 import 'react-toastify/dist/ReactToastify.css';
+import { useTranslation } from 'next-i18next'
+import { withStaticTranslations } from '../utils/I18';
+export const getStaticProps = withStaticTranslations(['common']);
 
 interface User {
     userName: string;
@@ -19,6 +21,7 @@ interface User {
 }
 const Login = () => {
 
+    const { t } = useTranslation('common');
     const [userInput, setUserInput] = React.useState<User>({
         username: "",
         password: "",
@@ -28,6 +31,7 @@ const Login = () => {
 
     const {addUser, isLoggedIn} = useAuthStore();
     const [localUser, setLocalUser] = React.useState<User | null>(null);
+    const [localUserMsg, setLocalUserMsg] = React.useState<string | null>("");
     const router = useRouter();
     const [localUserImg, setLocalUserImg] = React.useState<string | null>(null);
     const [registerLogin, setRegisterLogin] = React.useState<boolean>(false);
@@ -48,6 +52,7 @@ const Login = () => {
 
             if (userObject.image) { // 检查解析后的用户对象是否包含image属性
                 setLocalUserImg(userObject.image); // 如果存在，则设置用户图像状态
+                setLocalUserMsg(`${t("common:login-register-prefix")} ${userObject.userName} ${t("common:login-register-suffix")}`);
             }
         }else {
             setRegisterLogin(false);
@@ -56,7 +61,7 @@ const Login = () => {
 
 
     function extracted() {
-        toast("login successful! ", {
+        toast(t('common:login-message-success'), {
             position: "top-center",
             autoClose: 1500, // 1.5秒后自动关闭
             hideProgressBar: false,
@@ -72,7 +77,7 @@ const Login = () => {
 
     const checkUserInput = () => {
         if (!userInput.username.trim() || !userInput.password.trim()) {
-            toast("Username and password are required.", {
+            toast(t('common:login-message-fail-1'), {
                 position: "top-center",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -103,7 +108,7 @@ const Login = () => {
         });
 
         if (!foundUser) {
-            toast("Username or password is incorrect", {
+            toast(t('common:login-message-fail-1'), {
                 position: "top-center",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -172,7 +177,7 @@ const Login = () => {
                         <label
                             className="font-semibold text-sm text-gray-600 pb-1 block"
                             htmlFor="login"
-                        >Username</label
+                        >{t("common:login-username")}</label
                         >
                         <input
                             className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
@@ -184,7 +189,7 @@ const Login = () => {
                         <label
                             className="font-semibold text-sm text-gray-600 pb-1 block"
                             htmlFor="password"
-                        >Password</label
+                        >{t("common:login-password")}</label
                         >
                         <input
                             className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
@@ -216,7 +221,8 @@ const Login = () => {
                                 onClick={backUserClick}
                             >
                                 <img src={localUserImg || 'path_to_default_avatar'} alt="Avatar" className="w-6 h-6 rounded-full"/>
-                                {`Use ${localUser?.userName} to Login`}
+                                {` ${localUserMsg}`}
+
                             </button>
                         </div>
                     )}
@@ -226,7 +232,7 @@ const Login = () => {
                             type="submit"
                             onClick={checkUserInput}
                         >
-                            Log in
+                            {t("common:login-log-in")}
                         </button>
                     </div>
                     <div className="flex items-center justify-center mt-2"
@@ -238,7 +244,7 @@ const Login = () => {
                         <button
                             className="overflow-hidden w-24 p-1 h-8  border-none rounded-md  text-xs font-bold cursor-pointer relative z-10 group"
                         >
-                            Sign up
+                            {t("common:login-no-account")}
                             <span
                                 className="absolute w-28 h-24 -top-6 -left-2 bg-white rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-left"
                             ></span>
@@ -250,7 +256,7 @@ const Login = () => {
                             ></span>
                             <span
                                 className="group-hover:opacity-100 group-hover:duration-1000 duration-100 opacity-0 absolute top-1.5 left-4 z-10 text-sm text-white"
-                            >Sign up →</span
+                            >{t("common:login-sign-up")} →</span
                             >
 
                         </button>

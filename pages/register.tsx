@@ -2,9 +2,8 @@ import {Bounce, toast, ToastContainer} from "react-toastify";
 import {motion} from "framer-motion";
 import Image from "next/image";
 import Logo from "../utils/tiktik-logo.png";
-import {GoogleLogin} from "@react-oauth/google";
 import React, {useEffect, useState} from "react";
-import router, {useRouter} from "next/router";
+import {useRouter} from "next/router";
 import useAuthStore from "../store/authStore";
 import data from "../utils/data.json";
 import {uploadToOSS} from "./api/oss/uploadToOSS";
@@ -13,6 +12,9 @@ import {BASE_URL} from "../utils";
 import {generateRandomString} from "../utils/tools";
 import {FiUpload} from "react-icons/fi";
 import 'react-toastify/dist/ReactToastify.css';
+import { withStaticTranslations } from '../utils/I18';
+import {useTranslation} from "next-i18next";
+export const getStaticProps = withStaticTranslations(['common']);
 
 interface User {
     userName: string;
@@ -25,6 +27,7 @@ interface User {
 
 
 const Register = () => {
+    const { t } = useTranslation('common');
 
     const {addUser, isLoggedIn} = useAuthStore(); // 假设 useAuthStore 提供了 isLoggedIn 方法
 
@@ -51,7 +54,6 @@ const Register = () => {
     const router = useRouter();
 
     useEffect(() => {
-        // Assuming data.json is a valid JSON file
         // @ts-ignore
         setImages(data.images);
     }, []);
@@ -121,13 +123,13 @@ const Register = () => {
     async function clickRegister() {
         let errorMessage = '';
         if (userInput.username === '' || userInput.username.length < 3 || userInput.username.length > 15) {
-            errorMessage = 'Username must be between 3 and 15 characters';
+            errorMessage = t('common:register-message-fail1');
         } else if (userRePassword !== userInput.password) {
-            errorMessage = 'The passwords entered twice are inconsistent';
-        } else if (userInput.password === '' || userInput.password.length < 3 || userInput.password.length > 15) {
-            errorMessage = 'Password must be between 3 and 15 characters';
+            errorMessage =  t('common:register-message-fail2');
+        } else if (userInput.password === '' || userInput.password.length < 6 || userInput.password.length > 15) {
+            errorMessage =  t('common:register-message-fail3');
         }else if (selectedImage === null) {
-            errorMessage = 'Please select an image';
+            errorMessage =  t('common:register-message-fail4');
         } else {
             await setUserInput({...userInput, image: selectedImage, userName: userInput.username});
             checkUserPassword();
@@ -160,7 +162,7 @@ const Register = () => {
 
         users.forEach((user: User) => {
             if (user.type === "Web" && userInput.username === user.userName) {
-                errors.push("Username already exists, please choose another username");
+                errors.push(t('common:register-message-fail5'));
             }
         });
 
@@ -202,7 +204,7 @@ const Register = () => {
             if (axiosResponse.status === 200) {
                 localStorage.setItem('user', JSON.stringify(user));
                 // 在重定向之前显示注册成功的弹窗提示
-                toast("Registration successful! Redirecting to login...", {
+                toast( t('common:register-message-success1'), {
                     position: "top-center",
                     autoClose: 1500, // 1.5秒后自动关闭
                     hideProgressBar: false,
@@ -215,11 +217,11 @@ const Register = () => {
                     onClose: () => router.push("/login") // 在弹窗关闭后重定向到登录页面
                 });
             } else {
-                throw new Error('An error occurred during registration');
+                throw new Error(t('common:register-message-fail6'));
             }
         } catch (error) {
-            setError('An error occurred during registration');
-            toast('An error occurred during registration', {
+            setError( t('common:register-message-fail6'));
+            toast(t('common:register-message-fail6'), {
                 position: "top-center",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -238,7 +240,7 @@ const Register = () => {
             // @ts-ignore
             document.getElementById('avatarUpload').click();
         }else {
-            toast("You can only upload one image", {
+            toast( t('common:register-message-fail7'), {
                 position: "top-center",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -278,7 +280,7 @@ const Register = () => {
                             <label
                                 className="font-semibold text-sm text-gray-600 pb-1 block"
                                 htmlFor="login"
-                            >Username</label
+                            >{t('common:register-username')}</label
                             >
                             <input
                                 className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
@@ -289,7 +291,7 @@ const Register = () => {
                             <label
                                 className="font-semibold text-sm text-gray-600 pb-1 block"
                                 htmlFor="password"
-                            >Password</label
+                            >{t('common:register-password')}</label
                             >
                             <input
                                 className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
@@ -300,7 +302,7 @@ const Register = () => {
                             <label
                                 className="font-semibold text-sm text-gray-600 pb-1 block"
                                 htmlFor="password"
-                            >Confirm Password</label>
+                            >{t('common:register-confirm-password')}</label>
                             <input
                                 className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                                 type="password"
@@ -316,7 +318,7 @@ const Register = () => {
                             </a>
                         </div>
                         <div className="text-right mb-2">
-                            <h3 className="text-xs text-center sm:text-sm font-medium text-gray-700 mb-2 h-8" >Select Your Avatar:</h3>
+                            <h3 className="text-xs text-center sm:text-sm font-medium text-gray-700 mb-2 h-8" >{t('common:register-Select-Avatar')}</h3>
                         </div>
                         <div className="flex justify-center w-full items-center">
                             <div className="grid grid-cols-3 gap-2 sm:gap-3">
@@ -357,7 +359,7 @@ const Register = () => {
                                 type="submit"
                                 onClick={clickRegister}
                             >
-                                Register
+                                {t('common:register-register')}
                             </button>
                         </div>
                         <div className="flex items-center justify-center mt-2"
@@ -369,7 +371,7 @@ const Register = () => {
                             <button
                                 className="overflow-hidden w-24 p-1 h-8  border-none rounded-md  text-xs font-bold cursor-pointer relative z-10 group"
                             >
-                                Back
+                                {t('common:register-back')}
                                 <span
                                     className="absolute w-28 h-24 -top-6 -left-2 bg-white rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-right"
                                 ></span>
@@ -381,7 +383,7 @@ const Register = () => {
                                 ></span>
                                 <span
                                     className="group-hover:opacity-100 group-hover:duration-1000 duration-100 opacity-0 absolute top-1.5 left-4 z-10 text-sm text-white"
-                                >← Log in</span
+                                >← {t('common:register-login')}</span
                                 >
 
                             </button>

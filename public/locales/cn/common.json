@@ -1,0 +1,83 @@
+{
+    "login-log-in": "登录",
+    "login-title": "登录",
+    "login-username": "用户名",
+    "login-password": "密码",
+    "login-no-account": "没有账号?",
+    "login-sign-up": "注册",
+    "login-register-prefix": "用",
+    "login-register-suffix": "的身份登录",
+    "login-message-success": "登录成功!",
+    "login-message-fail": "登录失败!",
+    "login-message-fail-1": "登录失败!用户名或密码错误!",
+
+    "register-title": "注册",
+    "register-username": "用户名",
+    "register-password": "密码",
+    "register-confirm-password": "确认密码",
+    "register-Select-Avatar": "选择头像",
+    "register-register": "注册",
+    "register-back": "返回",
+    "register-login": "登录",
+    "register-message-success": "注册成功!",
+    "register-message-fail1": "用户名必须在3-15个字符之间!",
+    "register-message-fail2": "两次输入的密码不一致!",
+    "register-message-fail3": "密码必须在6-15个字符之间!",
+    "register-message-fail4": "请选择头像!",
+    "register-message-fail5": "用户名已存在!",
+    "register-message-fail6": "注册期间发生错误,请联系管理员!",
+    "register-message-fail7": "您只能上传一次图片!",
+    "register-message-success1": "注册成功!正在跳转到登录页面...",
+
+    "upload-title":"上传视频",
+    "upload-title-small": "将视频发布到您的账户",
+    "upload-caption": "标题",
+    "upload-topic": "选择一个主题",
+    "upload-discard": "丢弃",
+    "upload-post": "发布",
+    "upload-post-loading": "发布中...",
+    "upload-post-select": "选择要上传的视频",
+    "upload-message-1": "MP4 或者 WebM 或者 ogg 格式",
+    "upload-message-2": "建议尺寸 720x1280",
+    "upload-message-3": "上传时长小于10分钟",
+    "upload-message-4": "上传大小2GB",
+    "upload-select": "选择文件",
+    "upload-message-red": "请选择一个视频文件(MP4/WebM/ogg 格式)",
+
+    "comment-first": "暂时没有评论！成为第一个添加评论的人!",
+    "comment-add-message": "添加评论..",
+    "comment-button": "评论",
+    "comment-button-ing": "评论中...",
+
+    "navbar-select":"搜索账号或视频",
+    "navbar-upload":"上传",
+
+    "discover-topic": "热门话题",
+
+    "sidebar-me": "主页",
+    "suggested-accounts": "热门账号",
+
+    "search-accounts":"账号",
+    "search-video":"视频",
+    "search-video-no":"没有搜索到视频结果为",
+    "search-accounts-no":"没有搜索到账号结果为",
+
+    "userid-video": "视频",
+    "userid-like": "喜欢 ",
+    "userid-no": "没有",
+
+
+    "topics": {
+        "development": "开发",
+        "comedy": "喜剧",
+        "gaming": "游戏",
+        "food": "食物",
+        "dance": "舞蹈",
+        "beauty": "颜值",
+        "animals": "萌宠",
+        "sports": "运动"
+    }
+
+
+
+}

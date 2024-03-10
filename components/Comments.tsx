@@ -6,6 +6,8 @@ import { GoVerified } from 'react-icons/go';
 import useAuthStore from '../store/authStore';
 import NoResults from './NoResults';
 import { IUser } from '../types';
+import { useTranslation } from 'next-i18next'
+
 
 interface IProps {
     isPostingComment: Boolean;
@@ -23,6 +25,7 @@ interface IComment {
 }
 
 const Comments = ({ comment, setComment, addComment, comments, isPostingComment }: IProps) => {
+    const { t } = useTranslation('common');
     const { allUsers, userProfile }: any = useAuthStore();
 
     return (
@@ -65,7 +68,7 @@ const Comments = ({ comment, setComment, addComment, comments, isPostingComment 
                         </>
                     ))
                 ) : (
-                    <NoResults text='No Comments Yet! Be First to do add the comment.' />
+                    <NoResults text={t('common:comment-first')}/>
                 )}
             </div>
             {userProfile && <div className='absolute bottom-0 left-0  pb-6 px-2 md:px-10 '>
@@ -74,10 +77,10 @@ const Comments = ({ comment, setComment, addComment, comments, isPostingComment 
                         value={comment}
                         onChange={(e) => setComment(e.target.value.trim())}
                         className='bg-primary px-6 py-4 text-md font-medium border-2 w-[250px] md:w-[700px] lg:w-[350px] border-gray-100 focus:outline-none focus:border-2 focus:border-gray-300 flex-1 rounded-lg'
-                        placeholder='Add comment..'
+                        placeholder={t('common:comment-add-message')}
                     />
                     <button className='text-md text-gray-400 ' onClick={addComment}>
-                        {isPostingComment ? 'Commenting...' : 'Comment'}
+                        {isPostingComment ? t('common:comment-button-ing') : t('common:comment-button')}
                     </button>
                 </form>
             </div>}

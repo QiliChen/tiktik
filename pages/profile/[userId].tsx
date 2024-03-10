@@ -7,6 +7,8 @@ import VideoCard from '../../components/VideoCard';
 import NoResults from '../../components/NoResults';
 import { IUser, Video } from '../../types';
 import { BASE_URL } from '../../utils';
+import {serverSideTranslations} from "next-i18next/serverSideTranslations";
+import { useTranslation } from 'next-i18next'
 
 interface IProps {
   data: {
@@ -17,6 +19,7 @@ interface IProps {
 }
 
 const Profile = ({ data }: IProps) => {
+  const { t } = useTranslation('common');
   const [showUserVideos, setShowUserVideos] = useState<Boolean>(true);
   const [videosList, setVideosList] = useState<Video[]>([]);
 
@@ -61,10 +64,10 @@ const Profile = ({ data }: IProps) => {
       <div>
         <div className='flex gap-10 mb-10 mt-10 border-b-2 border-gray-200 bg-white w-full'>
           <p className={`text-xl font-semibold cursor-pointer ${videos} mt-2`} onClick={() => setShowUserVideos(true)}>
-            Videos
+            {t('common:userid-video')}
           </p>
           <p className={`text-xl font-semibold cursor-pointer ${liked} mt-2`} onClick={() => setShowUserVideos(false)}>
-            Liked
+            {t('common:userid-like')}
           </p>
         </div>
         <div className='flex gap-6 flex-wrap md:justify-start'>
@@ -74,7 +77,7 @@ const Profile = ({ data }: IProps) => {
             ))
           ) : (
             <NoResults
-              text={`No ${showUserVideos ? '' : 'Liked'} Videos Yet`}
+                text={`${t('common:userid-no')} ${showUserVideos ? '' : t('common:userid-like')}${t('common:userid-video')}`}
             />
           )}
         </div>
@@ -84,14 +87,24 @@ const Profile = ({ data }: IProps) => {
 };
 
 export const getServerSideProps = async ({
-  params: { userId },
-}: {
+                                           params: { userId },
+                                           locale, // 从 Next.js 上下文中获取当前的 locale（语言环境）
+                                         }: {
   params: { userId: string };
+  locale: string;
 }) => {
+  // 从 API 获取用户数据
   const res = await axios.get(`${BASE_URL}/api/profile/${userId}`);
 
+  // 使用 serverSideTranslations 加载特定的命名空间翻译资源
+  // 假设你的翻译资源存储在 'common' 和 'profile' 命名空间
+  const i18nProps = await serverSideTranslations(locale, ['common', 'profile']);
+
   return {
-    props: { data: res.data },
+    props: {
+      data: res.data,
+      ...i18nProps, // 将翻译资源传递给页面的 props
+    },
   };
 };
 export default Profile;

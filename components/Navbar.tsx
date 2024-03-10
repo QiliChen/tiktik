@@ -5,15 +5,17 @@ import { useRouter } from 'next/router';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { BiSearch } from 'react-icons/bi';
 import { IoMdAdd } from 'react-icons/io';
-import { GoogleLogin, googleLogout  } from '@react-oauth/google';
+import { googleLogout  } from '@react-oauth/google';
 
 import useAuthStore from '../store/authStore';
 import { IUser } from '../types';
 import Logo from '../utils/tiktik-logo.png';
 import {IoLogInOutline} from "react-icons/io5";
-import {Bounce, toast, ToastContainer} from "react-toastify";
+import {useTranslation} from "next-i18next";
+import LanguageSwitcher from "../utils/I18Switch";
 
 const Navbar = () => {
+    const { t } = useTranslation('common');
     const [user, setUser] = useState<IUser | null>();
     const [searchValue, setSearchValue] = useState('');
     const router = useRouter();
@@ -53,7 +55,7 @@ const Navbar = () => {
                         value={searchValue}
                         onChange={(e) => setSearchValue(e.target.value)}
                         className='bg-primary p-3 md:text-md font-medium border-2 border-gray-100 focus:outline-none focus:border-2 focus:border-gray-300 w-[300px] md:w-[350px] rounded-full  md:top-0'
-                        placeholder='Search accounts and videos'
+                        placeholder={t('common:navbar-select')}
                     />
                     <button
                         onClick={handleSearch}
@@ -66,10 +68,11 @@ const Navbar = () => {
             <div>
                 {user ? (
                     <div className='flex gap-3 md:gap-5'>
+                        <LanguageSwitcher />
                         <Link href='/upload'>
                             <button className='border-2 h-10 px-2 md:px-4 text-md font-semibold flex items-center gap-2'>
                                 <IoMdAdd className='text-xl'/>{' '}
-                                <span className='hidden md:block'>Upload </span>
+                                <span className='hidden md:block'>{t('common:navbar-upload')}</span>
                             </button>
                         </Link>
                         {user.image && (
@@ -98,6 +101,7 @@ const Navbar = () => {
                     </div>
                 ) : (
                     <div className={"flex gap-1 md:gap-2 "}>
+                        <LanguageSwitcher />
                         <Link href='/login'>
                             <button className='border-2 h-10 px-2 md:px-4 text-md font-semibold flex items-center gap-2'>
                                 <IoLogInOutline className='text-xl'/>

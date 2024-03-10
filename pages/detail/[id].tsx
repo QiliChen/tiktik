@@ -13,10 +13,12 @@ import useAuthStore from '../../store/authStore';
 import { Video } from '../../types';
 import axios from 'axios';
 import LikeButton from '../../components/LikeButton';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 interface IProps {
   postDetails: Video;
 }
+
 
 const Detail = ({ postDetails }: IProps) => {
   const [post, setPost] = useState(postDetails);
@@ -162,15 +164,19 @@ const Detail = ({ postDetails }: IProps) => {
   );
 };
 
-export const getServerSideProps = async ({
-  params: { id },
-}: {
-  params: { id: string };
-}) => {
+// @ts-ignore
+export const getServerSideProps = async ({ params, locale }) => {
+  const { id } = params;
   const res = await axios.get(`${BASE_URL}/api/post/${id}`);
 
+  // 加载翻译资源
+  const i18nProps = await serverSideTranslations(locale, ['common']);
+
   return {
-    props: { postDetails: res.data },
+    props: {
+      postDetails: res.data,
+      ...i18nProps, // 将翻译属性添加到 props 中
+    },
   };
 };
 

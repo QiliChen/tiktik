@@ -9,7 +9,9 @@ import SuggestedAccounts from './SuggestedAccounts';
 import Discover from './Discover';
 import Footer from './Footer';
 import useAuthStore from '../store/authStore';
+import {useTranslation} from "next-i18next";
 const Sidebar: NextPage = () => {
+    const { t } = useTranslation('common');
     const [showSidebar, setShowSidebar] = useState<Boolean>(true);
     const { pathname } = useRouter();
     const { fetchAllUsers, allUsers }: any = useAuthStore();
@@ -35,7 +37,7 @@ const Sidebar: NextPage = () => {
                                     <AiFillHome />
                                 </p>
                                 <span className='capitalize text-xl hidden xl:block'>
-                  For You
+                  {t('common:sidebar-me')}
                 </span>
                             </div>
                         </Link>
