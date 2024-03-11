@@ -10,7 +10,6 @@
     "login-message-success": "Login successful!",
     "login-message-fail": "Login failed!",
     "login-message-fail-1": "Login failed! Username or password is incorrect!",
-
     "register-title": "Sign Up",
     "register-username": "Username",
     "register-password": "Password",
@@ -28,7 +27,6 @@
     "register-message-fail6": "An error occurred during registration, please contact the administrator!",
     "register-message-fail7": "You can only upload an image once!",
     "register-message-success1": "Registration successful! Redirecting to the login page...",
-
     "upload-title": "Upload Video",
     "upload-title-small": "Post a video to your account",
     "upload-caption": "Caption",
@@ -43,40 +41,28 @@
     "upload-message-4": "Less than 2 GB",
     "upload-select": "Select File",
     "upload-message-red": "Please select a video file (MP4/WebM/ogg format)",
-
     "comment-first": "No Comments Yet! Be First to do add the comment!",
     "comment-add-message": "Add comment..",
     "comment-button": "Comment",
     "comment-button-ing": "Commenting...",
-
-    "navbar-select":"Search accounts and videos",
-    "navbar-upload":"Upload",
+    "navbar-select": "Search accounts and videos",
+    "navbar-upload": "Upload",
     "discover-topic": " Popular Topics",
-
     "sidebar-me": "For you",
     "suggested-accounts": "Suggested accounts",
-
-    "search-accounts":"Accounts",
-    "search-video":"Videos",
-    "search-video-no":"No Video Results for",
-    "search-accounts-no":"No Account Results for",
-
+    "search-accounts": "Accounts",
+    "search-video": "Videos",
+    "search-video-no": "No Video Results for",
+    "search-accounts-no": "No Account Results for",
     "userid-video": "Videos",
     "userid-like": "Liked ",
     "userid-no": "no",
-
-
-    "topics": {
-        "development": "Development",
-        "comedy": "Comedy",
-        "gaming": "Gaming",
-        "food": "Food",
-        "dance": "Dance",
-        "beauty": "Beauty",
-        "animals": "Animals",
-        "sports": "Sports"
-    }
-
-
-
+    "Development": "Development",
+    "Comedy": "Comedy",
+    "Gaming": "Gaming",
+    "Food": "Food",
+    "Dance": "Dance",
+    "Beauty": "Beauty",
+    "Animals": "Animals",
+    "Sports": "Sports"
 }

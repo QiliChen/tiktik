@@ -10,42 +10,42 @@ export const useTopics = () => {
   const topics = [
     {
       id:"development",
-      name: t('common:topics.development'),
+      name: t('common:Development'),
       icon: <BsCode />,
     },
     {
       id:"comedy",
-      name: t('common:topics.comedy'),
+      name: t('common:Comedy'),
       icon: <BsEmojiSunglasses />,
     },
     {
       id:"gaming",
-      name: t('common:topics.gaming'),
+      name: t('common:Gaming'),
       icon: <FaGamepad />,
     },
     {
       id:"food",
-      name: t('common:topics.food'),
+      name: t('common:Food'),
       icon: <GiCakeSlice />,
     },
     {
       id:"dance",
-      name: t('common:topics.dance'),
+      name: t('common:Dance'),
       icon: <GiGalaxy />,
     },
     {
       id:"beauty",
-      name: t('common:topics.beauty'),
+      name: t('common:Beauty'),
       icon: <GiLipstick />,
     },
     {
       id:"animals",
-      name: t('common:topics.animals'),
+      name: t('common:Animals'),
       icon: <FaPaw />,
     },
     {
       id:"sports",
-      name: t('common:topics.sports'),
+      name: t('common:Sports'),
       icon: <FaMedal />,
     },
 
