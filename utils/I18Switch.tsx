@@ -6,7 +6,7 @@ const LanguageSwitcher = () => {
     const { locale, pathname, asPath, query } = router;
 
     // 定义支持的语言环境列表
-    const locales = ['en', 'cn']; // 确保这些值与您的 next.config.js 中的配置相匹配
+    const locales = ['en', 'cn'];
 
     const switchLanguage = () => {
         // 确定当前语言在列表中的索引
@@ -16,15 +16,26 @@ const LanguageSwitcher = () => {
         // 获取下一个语言
         const nextLocale = locales[nextLocaleIndex];
 
-        // 切换到下一个语言
-        router.push({ pathname, query }, asPath, { locale: nextLocale });
+        let newPath;
+        // 检查 asPath 是否以当前 locale 开始
+        if (new RegExp(`^/${locale}`).test(asPath)) {
+            // 如果是，则替换为新的 locale
+            newPath = asPath.replace(new RegExp(`^/${locale}`), `/${nextLocale}`);
+        } else {
+            // 如果不是，则在路径前添加新的 locale
+            newPath = `/${nextLocale}${asPath}`;
+        }
+
+        // 切换到下一个语言并强制刷新页面
+        window.location.href = newPath;
     };
+
 
     return (
         <button
             onClick={switchLanguage}
             aria-label="Switch Language"
-            className="md:hidden inline-flex" // 'md:hidden' 在 md 尺寸及以下隐藏, 'inline-flex' 用于其他尺寸显示
+            className="md:hidden inline-flex"
         >
             <AiOutlineTranslation size={32}/>
         </button>
