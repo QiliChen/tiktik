@@ -150,13 +150,13 @@ const Upload = () => {
       <div className=' bg-white rounded-lg xl:h-[80vh] flex gap-6 flex-wrap justify-center items-center p-14 pt-6'>
         <div>
           <div>
-            <p className='text-2xl font-bold'>{t('common:upload-title')}</p>
-            <p className='text-md text-gray-400 mt-1'>{t('common:upload-title-small')}</p>
+            <p className='text-2xl font-bold'>{t('common:UploadVideo')}</p>
+            <p className='text-md text-gray-400 mt-1'>{t('common:PostVideo')}</p>
           </div>
           <div className=' border-dashed rounded-xl border-4 border-gray-200 flex flex-col justify-center items-center  outline-none mt-10 w-[260px] h-[458px] p-10 cursor-pointer hover:border-red-300 hover:bg-gray-100'>
             {loading ? (
               <p className='text-center text-3xl text-red-400 font-semibold'>
-                {t('common:upload-post-loading')}
+                {t('common:Posting')}
               </p>
             ) : (
               <div>
@@ -168,7 +168,7 @@ const Upload = () => {
                           <FaCloudUploadAlt className='text-gray-300 text-6xl' />
                         </p>
                         <p className='text-xl font-semibold'>
-                          {t('common:upload-post-select')}
+                          {t('common:SelectVideoUpload')}
                         </p>
                       </div>
 
@@ -179,7 +179,7 @@ const Upload = () => {
                         {t('common:upload-message-4')}
                       </p>
                       <p className='bg-[#F51997] text-center mt-8 rounded text-white text-md font-medium p-2 w-52 outline-none'>
-                        {t('common:upload-select')}
+                        {t('common:SelectFile')}
                       </p>
                     </div>
                     <input
@@ -219,14 +219,14 @@ const Upload = () => {
           )}
         </div>
         <div className='flex flex-col gap-3 pb-10'>
-          <label className='text-md font-medium '>{t('common:upload-caption')}</label>
+          <label className='text-md font-medium '>{t('common:Caption')}</label>
           <input
             type='text'
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
             className='rounded lg:after:w-650 outline-none text-md border-2 border-gray-200 p-2'
           />
-          <label className='text-md font-medium '>{t('common:upload-topic')}</label>
+          <label className='text-md font-medium '>{t('common:SelectTopic')}</label>
 
           <select
             onChange={(e) => {
@@ -250,7 +250,7 @@ const Upload = () => {
               type='button'
               className='border-gray-300 border-2 text-md font-medium p-2 rounded w-28 lg:w-44 outline-none'
             >
-              {t('common:upload-discard')}
+              {t('common:Discard')}
             </button>
             <button
               disabled={videoAsset?.url ? false : true}
@@ -258,7 +258,7 @@ const Upload = () => {
               type='button'
               className='bg-[#F51997] text-white text-md font-medium p-2 rounded w-28 lg:w-44 outline-none'
             >
-              {savingPost ? t('common:upload-post-loading'): t('common:upload-post')}
+              {savingPost ? t('common:Posting'): t('common:Post')}
             </button>
           </div>
         </div>

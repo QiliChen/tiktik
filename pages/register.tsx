@@ -280,7 +280,7 @@ const Register = () => {
                             <label
                                 className="font-semibold text-sm text-gray-600 pb-1 block"
                                 htmlFor="login"
-                            >{t('common:register-username')}</label
+                            >{t('common:Username')}</label
                             >
                             <input
                                 className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
@@ -291,7 +291,7 @@ const Register = () => {
                             <label
                                 className="font-semibold text-sm text-gray-600 pb-1 block"
                                 htmlFor="password"
-                            >{t('common:register-password')}</label
+                            >{t('common:Password')}</label
                             >
                             <input
                                 className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
@@ -302,7 +302,7 @@ const Register = () => {
                             <label
                                 className="font-semibold text-sm text-gray-600 pb-1 block"
                                 htmlFor="password"
-                            >{t('common:register-confirm-password')}</label>
+                            >{t('common:ConfirmPassword')}</label>
                             <input
                                 className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                                 type="password"
@@ -318,7 +318,7 @@ const Register = () => {
                             </a>
                         </div>
                         <div className="text-right mb-2">
-                            <h3 className="text-xs text-center sm:text-sm font-medium text-gray-700 mb-2 h-8" >{t('common:register-Select-Avatar')}</h3>
+                            <h3 className="text-xs text-center sm:text-sm font-medium text-gray-700 mb-2 h-8" >{t('common:SelectAvatar')}</h3>
                         </div>
                         <div className="flex justify-center w-full items-center">
                             <div className="grid grid-cols-3 gap-2 sm:gap-3">
@@ -359,7 +359,7 @@ const Register = () => {
                                 type="submit"
                                 onClick={clickRegister}
                             >
-                                {t('common:register-register')}
+                                {t('common:Register')}
                             </button>
                         </div>
                         <div className="flex items-center justify-center mt-2"
@@ -371,7 +371,7 @@ const Register = () => {
                             <button
                                 className="overflow-hidden w-24 p-1 h-8  border-none rounded-md  text-xs font-bold cursor-pointer relative z-10 group"
                             >
-                                {t('common:register-back')}
+                                {t('common:Back')}
                                 <span
                                     className="absolute w-28 h-24 -top-6 -left-2 bg-white rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-right"
                                 ></span>
@@ -383,7 +383,7 @@ const Register = () => {
                                 ></span>
                                 <span
                                     className="group-hover:opacity-100 group-hover:duration-1000 duration-100 opacity-0 absolute top-1.5 left-4 z-10 text-sm text-white"
-                                >← {t('common:register-login')}</span
+                                >← {t('common:Login')}</span
                                 >
 
                             </button>

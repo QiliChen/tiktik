@@ -37,7 +37,7 @@ const Sidebar: NextPage = () => {
                                     <AiFillHome />
                                 </p>
                                 <span className='capitalize text-xl hidden xl:block'>
-                  {t('common:sidebar-me')}
+                  {t('common:ForYou')}
                 </span>
                             </div>
                         </Link>

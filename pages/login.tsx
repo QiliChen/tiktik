@@ -177,7 +177,7 @@ const Login = () => {
                         <label
                             className="font-semibold text-sm text-gray-600 pb-1 block"
                             htmlFor="login"
-                        >{t("common:login-username")}</label
+                        >{t("common:Username")}</label
                         >
                         <input
                             className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
@@ -189,7 +189,7 @@ const Login = () => {
                         <label
                             className="font-semibold text-sm text-gray-600 pb-1 block"
                             htmlFor="password"
-                        >{t("common:login-password")}</label
+                        >{t("common:Password")}</label
                         >
                         <input
                             className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
@@ -232,7 +232,7 @@ const Login = () => {
                             type="submit"
                             onClick={checkUserInput}
                         >
-                            {t("common:login-log-in")}
+                            {t("common:Login")}
                         </button>
                     </div>
                     <div className="flex items-center justify-center mt-2"
@@ -244,7 +244,7 @@ const Login = () => {
                         <button
                             className="overflow-hidden w-24 p-1 h-8  border-none rounded-md  text-xs font-bold cursor-pointer relative z-10 group"
                         >
-                            {t("common:login-no-account")}
+                            {t("common:NoAccount")}
                             <span
                                 className="absolute w-28 h-24 -top-6 -left-2 bg-white rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-left"
                             ></span>
@@ -256,7 +256,7 @@ const Login = () => {
                             ></span>
                             <span
                                 className="group-hover:opacity-100 group-hover:duration-1000 duration-100 opacity-0 absolute top-1.5 left-4 z-10 text-sm text-white"
-                            >{t("common:login-sign-up")} →</span
+                            >{t("common:SignUp")} →</span
                             >
 
                         </button>
