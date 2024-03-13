@@ -7,9 +7,9 @@ import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import '../styles/globals.css';
 import { appWithTranslation } from 'next-i18next';
-
-import { useTranslation } from 'next-i18next'
 import {withStaticTranslations} from "../utils/I18";
+
+export const getStaticProps = withStaticTranslations(['common']);
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const [isSSR, setIsSSR] = useState(true);
