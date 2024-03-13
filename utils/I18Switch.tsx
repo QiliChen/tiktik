@@ -30,7 +30,6 @@ const LanguageSwitcher = () => {
         window.location.href = newPath;
     };
 
-
     return (
         <button
             onClick={switchLanguage}
@@ -39,7 +38,6 @@ const LanguageSwitcher = () => {
         >
             <AiOutlineTranslation size={32}/>
         </button>
-
     );
 };
 

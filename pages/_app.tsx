@@ -7,23 +7,18 @@ import Navbar from '../components/Navbar';
 import Sidebar from '../components/Sidebar';
 import '../styles/globals.css';
 import {appWithTranslation, useTranslation} from 'next-i18next';
-import {withStaticTranslations} from "../utils/I18";
-
-export const getStaticProps = withStaticTranslations(['common']);
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-    const { t } = useTranslation('common');
-  const [isSSR, setIsSSR] = useState(true);
-
-  useEffect(() => {
-    setIsSSR(false);
-  }, []);
-
-  if (isSSR) return null;
+  // const [isSSR, setIsSSR] = useState(true);
+  //
+  // useEffect(() => {
+  //   setIsSSR(false);
+  // }, []);
+  //
+  // if (isSSR) return null;
 
   return (
       <GoogleOAuthProvider clientId={`${process.env.NEXT_PUBLIC_GOOGLE_API_TOKEN}`}>
-          <div>{t("common:Login")}</div>
         <Head>
           {/* 添加全局头部信息，比如网站的 favicon，全局的 meta 信息等 */}
           {/*<link rel="icon" href="/favicon.ico" />*/}
