@@ -9,13 +9,13 @@ import '../styles/globals.css';
 import {appWithTranslation, useTranslation} from 'next-i18next';
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  // const [isSSR, setIsSSR] = useState(true);
-  //
-  // useEffect(() => {
-  //   setIsSSR(false);
-  // }, []);
-  //
-  // if (isSSR) return null;
+  const [isSSR, setIsSSR] = useState(true);
+
+  useEffect(() => {
+    setIsSSR(false);
+  }, []);
+
+  if (isSSR) return null;
 
   return (
       <GoogleOAuthProvider clientId={`${process.env.NEXT_PUBLIC_GOOGLE_API_TOKEN}`}>
