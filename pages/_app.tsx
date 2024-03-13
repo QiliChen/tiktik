@@ -20,7 +20,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   return (
       <GoogleOAuthProvider clientId={`${process.env.NEXT_PUBLIC_GOOGLE_API_TOKEN}`}>
-          <Login className={"display: none visibility: hidden"}></Login>
           <Head>
               {/* 添加全局头部信息，比如网站的 favicon，全局的 meta 信息等 */}
               {/*<link rel="icon" href="/favicon.ico" />*/}
