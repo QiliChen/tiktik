@@ -27,6 +27,8 @@ const Home = ({ videos }: IProps) => {
 
 // @ts-ignore
 export const getServerSideProps = async ({ locale, query: { topic } }) => {
+  const i18nProps = await serverSideTranslations(locale, ['common']);
+
   let response = await axios.get(`${BASE_URL}/api/post`);
 
   if(topic) {
@@ -37,6 +39,7 @@ export const getServerSideProps = async ({ locale, query: { topic } }) => {
     props: {
       ...(await serverSideTranslations(locale, ['common'])),
       videos: response.data,
+      ...i18nProps
     },
   };
 };
