@@ -6,7 +6,7 @@ const LanguageSwitcher = () => {
     const { locale, pathname, asPath, query } = router;
 
     // 定义支持的语言环境列表
-    const locales = ['en', 'cn'];
+    const locales = ['en', 'zh-CN'];
 
     const switchLanguage = () => {
         // 确定当前语言在列表中的索引
