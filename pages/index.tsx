@@ -29,8 +29,6 @@ const Home = ({ videos }: IProps) => {
 export const getServerSideProps = async ({ locale, query: { topic } }) => {
   const i18nProps = await serverSideTranslations(locale, ['common']);
 
-  console.log('locale------->', locale)
-
   let response = await axios.get(`${BASE_URL}/api/post`);
 
   if(topic) {
